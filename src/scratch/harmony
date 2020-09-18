@@ -1,0 +1,57 @@
+#! /bin/bash
+
+# Comments to support chkconfig on RedHat Linux
+# chkconfig: 2345 64 36
+# description: Harmony service script /etc/init.d/harmony
+
+my_base=`basename ${BASH_SOURCE[0]}`
+
+function usage_exit
+{
+  echo "Usage: $my_base {start|stop|status}" >&2
+  exit 1
+}
+
+if test $# -ne 1
+then
+  usage_exit
+fi
+
+action_mode=$1
+
+# This script requires environment variable HARMONY_BASE, HARMONY_USER and HARMONY_PORT
+target_base=$HARMONY_BASE
+target_user=$HARMONY_USER
+target_port=$HARMONY_PORT
+jvm_opt="$JVM_OPT"
+
+case $action_mode in
+start)
+  jdwp_port=`expr $target_port - 8085 + 6090`
+  cd $target_base
+  sudo -u $target_user bash -c "java $jvm_opt \
+            -agentlib:jdwp=transport=dt_socket,address=$jdwp_port,server=y,suspend=n \
+            -Dlogback.configurationFile=conf/logback.xml \
+            -Dlogging.config=conf/logback.xml \
+            -Dserver.port=$target_port \
+            -Dserver.ssl.key-store=conf/harmony_server_ks.jks \
+            -Dserver.ssl.key-store-password=changeit \
+            -Dserver.ssl.trust-store=conf/harmony_trust_ks.jks \
+            -Dserver.ssl.trust-store-password=changeit \
+            -Dserver.ssl.client-auth=need \
+            -Djavax.net.ssl.keyStore=conf/harmony_server_ks.jks \
+            -Djavax.net.ssl.keyStorePassword=changeit \
+            -Djavax.net.ssl.trustStore=conf/harmony_trust_ks.jks \
+            -Djavax.net.ssl.trustStorePassword=changeit \
+            -jar bin/harmony.app.jar > serv/harmony_app.log 2>&1 &"
+  ;;
+stop)
+  pgrep -f "server.port=$target_port .*harmony.app.jar" | xargs -t -I PID kill PID
+  ;;
+status)
+  pgrep -f "server.port=$target_port .*harmony.app.jar"
+  ;;
+*)
+  usage_exit
+  ;;
+esac

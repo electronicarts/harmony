@@ -1,0 +1,43 @@
+#! /bin/bash
+
+my_base=`pwd`
+
+target_base=`dirname ${my_base}`
+target_port=9087
+jvm_opt="$JVM_OPT"
+params=$@
+
+cd $target_base
+if [[ $# != 0 ]]; then
+java $jvm_opt \
+          -agentlib:jdwp=transport=dt_socket,address=6789,server=y,suspend=n \
+          -Dlogback.configurationFile=conf/logback_command.xml \
+          -Dlogging.config=conf/logback_command.xml \
+          -Dserver.port=$target_port \
+          -Dserver.ssl.key-store=conf/harmony_server_ks.jks \
+          -Dserver.ssl.key-store-password=changeit \
+          -Dserver.ssl.trust-store=conf/harmony_trust_ks.jks \
+          -Dserver.ssl.trust-store-password=changeit \
+          -Dserver.ssl.client-auth=need \
+          -Djavax.net.ssl.keyStore=conf/harmony_server_ks.jks \
+          -Djavax.net.ssl.keyStorePassword=changeit \
+          -Djavax.net.ssl.trustStore=conf/harmony_trust_ks.jks \
+          -Djavax.net.ssl.trustStorePassword=changeit \
+          -jar bin/harmony.command.jar '$params'
+else
+java $jvm_opt \
+          -agentlib:jdwp=transport=dt_socket,address=6789,server=y,suspend=n \
+          -Dlogback.configurationFile=conf/logback_command.xml \
+          -Dlogging.config=conf/logback_command.xml \
+          -Dserver.port=$target_port \
+          -Dserver.ssl.key-store=conf/harmony_server_ks.jks \
+          -Dserver.ssl.key-store-password=changeit \
+          -Dserver.ssl.trust-store=conf/harmony_trust_ks.jks \
+          -Dserver.ssl.trust-store-password=changeit \
+          -Dserver.ssl.client-auth=need \
+          -Djavax.net.ssl.keyStore=conf/harmony_server_ks.jks \
+          -Djavax.net.ssl.keyStorePassword=changeit \
+          -Djavax.net.ssl.trustStore=conf/harmony_trust_ks.jks \
+          -Djavax.net.ssl.trustStorePassword=changeit \
+          -jar bin/harmony.command.jar
+fi

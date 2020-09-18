@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ea.eadp</groupId>
+        <artifactId>harmony.pom.parent</artifactId>
+        <version>547.0.1-SNAPSHOT</version>
+    </parent>
+    <!--
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.1.7.RELEASE</version>
+    </parent>
+    -->
+
+    <groupId>com.ea.eadp</groupId>
+    <artifactId>harmony.app</artifactId>
+    <version>${com.ea.eadp.harmony.app.version}</version>
+    <packaging>jar</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>${project.groupId}:${project.artifactId}</description>
+    <properties>
+        <start-class>com.ea.eadp.harmony.app.Application</start-class>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+
+            <!-- copy and tar.gz -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <!-- Copy files into a target directory -->
+                                <descriptor>assembly-copy.xml</descriptor>
+                                <!-- Make a tar.gz out of the target directory -->
+                                <descriptor>assembly-tar.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${harmony.spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- tag::jetty[] -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+        <!-- end::jetty[] -->
+        <!-- tag::actuator[] -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- end::actuator[] -->
+
+        <dependency>
+            <groupId>com.ea.eadp</groupId>
+            <artifactId>harmony.configuration</artifactId>
+            <version>${com.ea.eadp.harmony.configuration.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ea.eadp</groupId>
+            <artifactId>harmony.shared</artifactId>
+            <version>${com.ea.eadp.harmony.shared.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ea.eadp</groupId>
+            <artifactId>harmony.core</artifactId>
+            <version>${com.ea.eadp.harmony.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ea.eadp</groupId>
+            <artifactId>harmony.mysql</artifactId>
+            <version>${com.ea.eadp.harmony.mysql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ea.eadp</groupId>
+            <artifactId>harmony.redis</artifactId>
+            <version>${com.ea.eadp.harmony.redis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ea.eadp</groupId>
+            <artifactId>harmony.command</artifactId>
+            <version>${com.ea.eadp.harmony.command.version}</version>
+        </dependency>
+    </dependencies>
+</project>

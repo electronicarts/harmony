@@ -1,0 +1,14 @@
+addComment.py
+copyright.txt
+*.iml
+.idea/
+src/harmony.ui/
+src/conf/
+target/
+src/harmony.pom.parent/
+/src/scratch/*
+!/src/scratch/cert_generator.sh
+!/src/scratch/harmony
+!/src/scratch/harmony_commandline
+src/harmony.command/conf/
+src/harmony.command/src/test/resources/conf/

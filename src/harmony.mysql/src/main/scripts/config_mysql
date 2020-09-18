@@ -1,0 +1,39 @@
+if test $# -ne 3
+then
+  echo "Usage: config_mysql cnf_file variable_name variable_value" >&2
+  exit 1
+fi
+
+# Do nothing. This is the existing behavior on INT and PROD.
+exit
+
+cnf_file=$1
+variable_name=$2
+variable_value=$3
+
+tmp_file=/tmp/tmp.crted.by.config_mysql.$$
+
+cat $cnf_file |
+perl -ne '
+  BEGIN {
+    $nm = "'$variable_name'";
+    $vl = "'$variable_value'";
+    $found = 0;
+  }
+  if (/^\s*$nm/) {
+    $found++;
+    print "$nm=$vl\n";
+  }
+  else {
+    print $_;
+  }
+  END {
+    if (! $found) {
+      print "[mysqld]\n";
+      print "$nm=$vl\n";
+    }
+  }
+' > $tmp_file
+
+cp $tmp_file $cnf_file
+rm $tmp_file

@@ -1,0 +1,51 @@
+function usage_exit
+{
+  echo "Usage: config_vip nic ip_addr nt_mask" >&2
+  echo "Usage: config_vip nic -d" >&2
+  exit 1
+}
+
+if test ! \( $# -eq 2 -o $# -eq 3 \)
+then
+  usage_exit
+fi
+
+# Do nothing. This is the existing behavior on INT and PROD.
+exit
+
+nic=$1
+rip_file=/etc/sysconfig/network-scripts/ifcfg-$nic
+vip_file=$rip_file:1
+
+if test $# -eq 2
+then
+  if test "$2" = "-d"
+  then
+    rm $vip_file
+    exit
+  else
+    usage_exit
+  fi
+fi
+
+ip_addr=$2
+nt_mask=$3
+
+tmp_file=/tmp/tmp.crted.by.config_vip.$$
+
+grep ^DEVICE $rip_file |
+perl -ne 's/"//g; s/\s+$//; print $_ . ":1\n"' > $tmp_file
+
+grep ^HWADDR $rip_file >> $tmp_file
+grep ^NM_CONTROLLED $rip_file >> $tmp_file
+grep ^GATEWAY $rip_file >> $tmp_file
+
+echo -n "
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=$ip_addr
+NETMASK=$nt_mask
+" >> $tmp_file
+
+cp $tmp_file $vip_file
+rm $tmp_file

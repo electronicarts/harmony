@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	
+	<id>assembly-copy</id>
+
+	<formats>
+		<format>dir</format>
+	</formats>
+
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<!-- directory -->
+	<fileSets>
+        <fileSet>
+            <directory>${basedir}/../conf</directory>
+            <outputDirectory>conf</outputDirectory>
+            <lineEnding>keep</lineEnding>
+            <fileMode>0554</fileMode>
+            <excludes>
+                <exclude>README</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../scratch</directory>
+            <outputDirectory>scratch</outputDirectory>
+            <lineEnding>keep</lineEnding>
+            <fileMode>0754</fileMode>
+            <excludes>
+                <exclude>README</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>.</directory>
+            <outputDirectory>serv</outputDirectory>
+            <fileMode>0754</fileMode>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+	</fileSets>
+
+    <!-- jar and script -->
+    <files>
+        <file>
+            <source>${basedir}/../harmony.configuration.data/target/harmony.configuration.data-${project.version}.jar</source>
+            <outputDirectory>conf</outputDirectory>
+            <destName>configuration-current.jar</destName>
+            <lineEnding>keep</lineEnding>
+            <fileMode>0754</fileMode>
+        </file>
+
+        <file>
+            <source>${basedir}/../harmony.command/target/harmony.command-${project.version}.jar</source>
+            <outputDirectory>bin</outputDirectory>
+            <destName>harmony.command.jar</destName>
+            <lineEnding>keep</lineEnding>
+            <fileMode>0754</fileMode>
+        </file>
+
+        <file>
+            <source>${project.build.directory}/${project.artifactId}-${project.version}.jar</source>
+            <outputDirectory>bin</outputDirectory>
+            <destName>harmony.app.jar</destName>
+            <lineEnding>keep</lineEnding>
+            <fileMode>0754</fileMode>
+        </file>
+
+        <file>
+            <source>${basedir}/../harmony.core/src/main/scripts/config_vip</source>
+            <outputDirectory>bin</outputDirectory>
+            <lineEnding>keep</lineEnding>
+            <fileMode>0754</fileMode>
+        </file>
+
+        <file>
+            <source>${basedir}/../harmony.mysql/src/main/scripts/config_mysql</source>
+            <outputDirectory>bin</outputDirectory>
+            <lineEnding>keep</lineEnding>
+            <fileMode>0754</fileMode>
+        </file>
+    </files>
+
+</assembly>
