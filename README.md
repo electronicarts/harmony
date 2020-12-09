@@ -1,4 +1,4 @@
-# EA harmony
+# EA harmony (test)
 
 EA harmony is a monitor program for the distributed database system, such as mysql and redis. Harmony supports autofailover and replication from the master node to slave node. When the master node is down, harmony can migrate data to the slave node and set the slave node as master node by using harmony commandlines.
 
